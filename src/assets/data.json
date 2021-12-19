@@ -1,0 +1,24 @@
+{
+    "users": {
+        "paula": {
+            "name": "Paula Exposito",
+            "password": "paula123"
+        },
+        "lucas": {
+            "name": "lucas",
+            "password": "lucas123"
+        }
+    },
+    "rankings": {
+        "r0": {
+            "user": "paula",
+            "date": "",
+            "points": 8
+        },
+        "r1": {
+            "user": "paula",
+            "date": "",
+            "points": 3
+        }
+    }
+}
