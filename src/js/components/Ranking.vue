@@ -1,8 +1,9 @@
 <template>
   <div class="container">
-    <h2>Instructions</h2>
-    <p>TODO: Write the instructions</p>
-    <n-button type="primary" @click="nextState">Siguiente</n-button>
+    <h2>Ranking</h2>
+		<p>TODO: Make a table with Rankings</p>
+		<p>TODO: Read data of Realtime Database in Firebase</p>
+    <n-button type="primary" @click="nextState">Volver al menú principal</n-button>
   </div>
 </template>
 
@@ -11,7 +12,7 @@ import { NButton } from "naive-ui";
 import { STATES } from "../../assets/variables";
 
 export default {
-  name: "Instructions",
+  name: "Ranking",
   components: {
     NButton
   },

@@ -1,8 +1,7 @@
 <template>
   <div class="container">
-    <h2>Instructions</h2>
-    <p>TODO: Write the instructions</p>
-    <n-button type="primary" @click="nextState">Siguiente</n-button>
+    <h2>¡Perdiste! :(</h2>
+    <n-button type="primary" @click="nextState">Volver al menú principal</n-button>
   </div>
 </template>
 
@@ -11,18 +10,18 @@ import { NButton } from "naive-ui";
 import { STATES } from "../../assets/variables";
 
 export default {
-  name: "Instructions",
+  name: "Lose",
   components: {
-    NButton
+    NButton,
   },
   data() {
     return {};
   },
   methods: {
     nextState() {
-      this.$emit('changeState', STATES.CHOOSE_LEVEL_STATE);
-    }
-  }
+      this.$emit("changeState", STATES.CHOOSE_LEVEL_STATE);
+    },
+  },
 };
 </script>
 

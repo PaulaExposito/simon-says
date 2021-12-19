@@ -2,20 +2,20 @@
   "name": "simon-says",
   "version": "1.0.0",
   "description": "Simon Says game developed with ThreeJS",
-  "main": "src/js/index.js",
   "scripts": {
     "dev": "parcel src/index.html",
-    "build": "parcel build src/index.html",
-    "deploy": "parcel build src/index.html --public-url /simon-dice/ -d build",
+    "build": "parcel build --dist-dir build src/index.html",
+    "deploy": "parcel build src/index.html --dist-dir build --public-url /simon-says/",
     "pages": "gh-pages -d build"
   },
   "author": "PaulaExposito",
   "license": "CC-BY-NC-4.0",
-  "devDependencies": {
+  "dependencies": {
     "@parcel/transformer-vue": "^2.0.1",
     "firebase": "^9.6.1",
     "gh-pages": "^3.2.3",
-    "naive-ui": "^2.23.0",
+    "naive-ui": "^2.23.1",
+    "parcel": "^2.0.0",
     "vue": "^3.2.26"
   }
 }
