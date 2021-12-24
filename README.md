@@ -2,7 +2,7 @@
 
 ## Usage
 
-## Third-Party Tecnhologies
+## Third-Party Technologies
 
 * Parcel
 * Vue

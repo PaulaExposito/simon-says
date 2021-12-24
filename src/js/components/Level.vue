@@ -1,32 +1,62 @@
 <template>
   <div class="container">
     <h2>Elige el nivel</h2>
-    <p>TODO: Put a selector of different levels</p>
-    <n-button type="primary" @click="nextState('game')">¡JUGAR!</n-button><br>
+
+    <n-radio-group v-model:value="value" name="radiogroup">
+      <n-space vertical>
+        <n-radio v-for="level in levels" :key="level.value" :value="level.value">
+          {{ level.label }}
+        </n-radio>
+      </n-space>
+    </n-radio-group>
+
+    <p>Level: {{ value }} </p>
+
+    <n-button type="primary" @click="nextState('game')">¡JUGAR!</n-button><br />
     <n-button type="primary" @click="nextState('rankings')">Rankings</n-button>
   </div>
 </template>
 
 <script>
-import { NButton } from "naive-ui";
+import { NButton, NRadioGroup, NSpace, NRadio } from "naive-ui";
 import { STATES } from "../../assets/variables";
 
 export default {
   name: "Level",
   components: {
-    NButton
+    NButton,
+    NRadioGroup,
+    NSpace,
+    NRadio
   },
   data() {
-    return {};
+    return {
+      value: 0,
+      levels: [
+        {
+          label: "Fácil",
+          value: 0
+        },
+        {
+          label: "Medio",
+          value: 1
+        },
+        {
+          label: "Difícil",
+          value: 2
+        },
+      ]
+    };
+  },
+  onCreated: {
+    
   },
   methods: {
     nextState(action) {
-      if (action === 'game')
-      	this.$emit('changeState', STATES.GAME_STATE);
-			else
-      	this.$emit('changeState', STATES.RANKINGS_STATE);
-    }
-  }
+      if (action === "game") this.$emit("changeState", { state: STATES.GAME_STATE, level: this.value });
+      else this.$emit("changeState", { state: STATES.RANKINGS_STATE });
+    },
+  },
 };
 </script>
 

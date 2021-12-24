@@ -4,10 +4,13 @@
     <Login v-if="currentState === states.LOGIN_STATE" v-on:logged="setLoggedUser"></Login>
 		<Instructions v-else-if="currentState === states.INSTRUCTION_STATE" v-on:changeState="nextState"></Instructions>
 		<Level v-if="currentState === states.CHOOSE_LEVEL_STATE" v-on:changeState="nextState"></Level>
-		<Game v-if="currentState === states.GAME_STATE" v-on:changeState="nextState"></Game>
+		<Game v-if="currentState === states.GAME_STATE" v-on:changeState="nextState" :level=level></Game>
 		<Ranking v-if="currentState === states.RANKINGS_STATE" v-on:changeState="nextState"></Ranking>
 		<Win v-if="currentState === states.WIN_STATE" v-on:changeState="nextState"></Win>
 		<Lose v-if="currentState === states.LOSE_STATE" v-on:changeState="nextState"></Lose>
+
+		<!-- <Game :level=0></Game> -->
+
   </div>
 </template>
 
@@ -37,6 +40,7 @@ export default {
     return {
       name: "Vue",
       loggedUser: false,
+      level: null,
       user: {
         email: "",
         name: "",
@@ -50,10 +54,11 @@ export default {
       this.loggedUser = true;
       this.user.email = user.email;
       this.user.name = this.user.email.split("@")[0];
-      this.nextState(STATES.INSTRUCTION_STATE);
+      this.nextState({ state: STATES.INSTRUCTION_STATE });
     },
-    nextState(newState) {
-      this.currentState = newState;
+    nextState(args) {
+      this.currentState = args.state;
+      this.level = args.level;
     },
   },
 };

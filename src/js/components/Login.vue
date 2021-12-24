@@ -1,18 +1,22 @@
 <template>
   <div class="cont">
     <n-form :label-width="80">
-			<n-form-item label="Email" path="user.email">
-			<n-input v-model:value="user.email" placeholder="Email" />
-			</n-form-item>
-			<n-form-item label="Contraseña" path="user.password">
-			<n-input v-model:value="user.password" type="password" placeholder="Contraseña" />
-			</n-form-item>
-			<n-form-item>
-			<div class="buttons">
-				<n-button secondary @click="signin">Entrar</n-button>
-				<n-button type="primary" @click="signup">Registrarse</n-button>
-			</div>
-			</n-form-item>
+      <n-form-item label="Email" path="user.email">
+        <n-input v-model:value="user.email" placeholder="Email" />
+      </n-form-item>
+      <n-form-item label="Contraseña" path="user.password">
+        <n-input
+          v-model:value="user.password"
+          type="password"
+          placeholder="Contraseña"
+        />
+      </n-form-item>
+      <n-form-item>
+        <div class="buttons">
+          <n-button secondary @click="signin">Entrar</n-button>
+          <n-button type="primary" @click="signup">Registrarse</n-button>
+        </div>
+      </n-form-item>
     </n-form>
   </div>
 </template>
@@ -35,11 +39,11 @@ export default {
   },
   data() {
     return {
-        formValue: "",
-        user: {
-            email: "",
-            password: "",
-        }
+      formValue: "",
+      user: {
+        email: "",
+        password: "",
+      },
     };
   },
   methods: {
@@ -49,10 +53,10 @@ export default {
         .then((userCredential) => {
           // Signed in
           const user = userCredential.user;
-					this.$emit('logged', user);
+          this.$emit("logged", user);
         })
         .catch((error) => {
-					window.alert(`Error ${error.code}: ${error.message}`)
+          window.alert(`Error ${error.code}: ${error.message}`);
         });
     },
     signin() {
@@ -61,10 +65,10 @@ export default {
         .then((userCredential) => {
           // Signed in
           const user = userCredential.user;
-					this.$emit('logged', user);
+          this.$emit("logged", user);
         })
         .catch((error) => {
-					window.alert(`Error ${error.code}: ${error.message}`);
+          window.alert(`Error ${error.code}: ${error.message}`);
         });
     },
   },
@@ -73,19 +77,19 @@ export default {
 
 <style>
 .cont {
-	display: flex;
-	align-items: center;
-	justify-content: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
-	height: 200px;
-	padding: 40px 40px 40px 40px;
-	background: lightslategray;
+  height: 200px;
+  padding: 40px 40px 40px 40px;
+  background: lightslategray;
 }
 
 .buttons {
-	width: 100%;
-	display: flex;
-	align-items: center;
-	justify-content: space-around;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
 }
 </style>

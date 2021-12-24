@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "parcel src/index.html",
     "build": "parcel build --dist-dir build src/index.html",
-    "deploy": "parcel build src/index.html --dist-dir build --public-url /simon-says/",
+    "deploy": "parcel build src/index.html --dist-dir build --public-url /simon-says/ & pages",
     "pages": "gh-pages -d build"
   },
   "author": "PaulaExposito",

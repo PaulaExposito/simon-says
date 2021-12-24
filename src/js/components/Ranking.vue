@@ -21,7 +21,7 @@ export default {
   },
   methods: {
     nextState() {
-      this.$emit('changeState', STATES.CHOOSE_LEVEL_STATE);
+      this.$emit('changeState', { state: STATES.CHOOSE_LEVEL_STATE });
     }
   }
 };

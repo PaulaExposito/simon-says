@@ -21,9 +21,9 @@ export default {
   methods: {
     nextState(action) {
       if (action === 'next')
-      	this.$emit('changeState', STATES.GAME_STATE);
+      	this.$emit('changeState', { state: STATES.GAME_STATE });
 			else
-      	this.$emit('changeState', STATES.CHOOSE_LEVEL_STATE);
+      	this.$emit('changeState', { state: STATES.CHOOSE_LEVEL_STATE });
     }
   }
 };
