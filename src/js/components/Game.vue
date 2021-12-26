@@ -18,7 +18,12 @@
 
 <script>
 import { NButton, NSpace } from "naive-ui";
-import { STATES } from "../../assets/variables";
+import { STATES, COLORS } from "../../assets/variables";
+
+const objects = [];
+const colorsIndexSelected = [], geometriesSelected = [];
+let scene, camera, renderer;
+
 
 export default {
   name: "Game",
@@ -38,29 +43,23 @@ export default {
       rules: {
         0: {
           name: "Fácil",
-          numInitObjects: 4,
+          numObjects: 4,
           timeForObject: 3,
           timeMultiplier: 3, // 3 * sequenceSize
         },
         1: {
           name: "Medio",
-          numInitObjects: 5,
+          numObjects: 5,
           timeForObject: 2,
           timeMultiplier: 2,
         },
         2: {
           name: "Difícil",
-          numInitObjects: 6,
+          numObjects: 6,
           timeForObject: 1,
           timeMultiplier: 1.5,
         },
       },
-      threeJS: {
-        scene: null,
-        camera: null,
-        renderer: null,
-        cube: null
-      }
     };
   },
   mounted() {
@@ -80,14 +79,14 @@ export default {
     },
     displayInfo() {
       this.round++;
-      this.sequenceSize = this.rules[this.level].numInitObjects;
+      this.sequenceSize = this.rules[this.level].numObjects;
       this.time =
         this.sequenceSize *
         this.rules[this.level].timeForObject *
         this.rules[this.level].timeMultiplier;
     },
     displayCountdown() {
-      let contdown = 3;
+      let contdown = 0;
       const intervalId = setInterval(countdown, 1000);
       const node = document.getElementById("countdown");
       node.style.display = "block";
@@ -108,45 +107,121 @@ export default {
       }
     },
     start() {
-      const gameNode = document.getElementById("game");
-      console.log("start");
+      this.initWorld();
 
+      // Build a cube
+      for (let i = 0; i < this.rules[this.level].numObjects; ++i) {
+        this.createObject(i);
+      }
+
+      // Set camera position
+      camera.position.z = 5;
+
+      // Render the scene
+      // It is a loop that draw the scene every time the screen is refresed (about 60 times/second)
+      this.animate();
+    },
+    initWorld() {
       // To display anything with ThreeJS we need a scene, a camera and a renderer
-      this.scene = new THREE.Scene();
-      this.camera = new THREE.PerspectiveCamera(
+      const gameNode = document.getElementById("game");
+      scene = new THREE.Scene();
+      camera = new THREE.PerspectiveCamera(
         75,
         gameNode.clientWidth / gameNode.clientHeight,
         0.1,
         1000
       );
-      this.renderer = new THREE.WebGLRenderer();
-      this.renderer.setSize(gameNode.clientWidth, gameNode.clientHeight);
-      document.getElementById("game").appendChild(this.renderer.domElement);
+      renderer = new THREE.WebGLRenderer();
+      renderer.setSize(gameNode.clientWidth, gameNode.clientHeight);
+      document.getElementById("game").appendChild(renderer.domElement);
+    },
+    createObject(index) {
+      const geometry = this.getRandomGeometry();
 
-      // Build a cube
-      const geometry = new THREE.BoxGeometry(1, 1, 1);
-      const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
-      this.cube = new THREE.Mesh(geometry, material);
-      this.scene.add(this.cube); // By default puts the cube at (0,0,0), the same coordinates where the camera is so we need to move the camera
+      const color = this.getRandomColor();
+      const material = new THREE.MeshBasicMaterial({ color: color });
 
-      this.camera.position.z = 5;
+      let obj = new THREE.Mesh(geometry, material);
 
-      // Render the scene
-      // It is a loop that draw the scene every time the screen is refresed (about 60 times/second)
-      this.animate();
+      const numObjects = this.rules[this.level].numObjects;
 
+      obj.position.y = (index < numObjects / 2) ? 1.2 : -1.2;
 
+      let numObjsRow = Math.ceil(numObjects / 2);
+      let relObjIndex = index % numObjsRow;
 
+      if (numObjsRow % 2 == 1) {
+        let centerObj = Math.trunc(numObjsRow / 2);
+
+        if (relObjIndex == centerObj) { // Pos 0,0
+          obj.position.x = 0;
+        }
+        else if (relObjIndex < centerObj) { // Left
+          obj.position.x = - 2 * (centerObj - relObjIndex);
+        }
+        else {  // Right
+          obj.position.x = 2 * (relObjIndex - centerObj);
+        }
+      }
+      else {
+        if (relObjIndex < numObjsRow / 2) {
+          obj.position.x = - (1 + 2 * (numObjsRow / 2 - (relObjIndex + 1)));
+        }
+        else {
+          obj.position.x = 1 + 2 * ( numObjsRow / 2 - (numObjsRow - relObjIndex) );
+        }
+      }
+
+      objects.push(obj);
+      scene.add(obj); // By default puts the cube at (0,0,0), the same coordinates where the camera is so we need to move the camera
     },
     animate() {
       requestAnimationFrame(this.animate);
 
-      // Animate the cube
-      this.cube.rotation.x += 0.01;
-      this.cube.rotation.y += 0.01;
+      // Animate the cube 
+      // this.cube.rotation.x += 0.01; 
+      // this.cube.rotation.y += 0.01;
 
-      this.renderer.render(this.scene, this.camera);
+      renderer.render(scene, camera);
     },
+    getRandom(min, max) {
+      return Math.trunc(Math.random() * (max - min) + min);   // min included, max excluded
+    },
+    getRandomColor() {
+      while (true) {
+        const index = this.getRandom(0, COLORS.length);
+        if (!colorsIndexSelected.includes(index)) {
+          colorsIndexSelected.push(index);
+          return COLORS[index];
+        }
+      }
+    },
+    getRandomGeometry() {
+      const NUM_GEOMETRIES = 6;
+      let geo = this.getRandom(0, NUM_GEOMETRIES);
+
+      if (geometriesSelected.includes(geo))
+        geo = this.getRandom(0, NUM_GEOMETRIES);
+
+      let cont = 0;
+      while (geometriesSelected.includes(geo) && cont < NUM_GEOMETRIES) {
+        geo = this.getRandom(0, NUM_GEOMETRIES);
+        cont++;
+      }
+      geometriesSelected.push(geo);
+
+      // console.log(geo)
+
+      switch(geo) {
+        case 0: return new THREE.BoxGeometry();
+        case 1: return new THREE.ConeGeometry();
+        case 2: return new THREE.IcosahedronGeometry(0.8);
+        case 3: return new THREE.OctahedronGeometry(0.8);
+        case 4: return new THREE.TorusGeometry(0.5, 0.2);
+        case 5: return new THREE.SphereGeometry(0.7);
+        default: return new THREE.TorusKnotGeometry();
+      }
+    }
   },
 };
 </script>
@@ -165,7 +240,7 @@ export default {
 
 #game {
   height: 100%;
-  background: cornflowerblue;
+  background: black;
 }
 
 #countdown {

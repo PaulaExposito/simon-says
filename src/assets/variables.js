@@ -8,4 +8,16 @@ const STATES = {
     GAME_STATE: "game",
 };
 
-export { STATES };
+const COLORS = [
+    0xCF1E1B,
+    0xFA8219,
+    0xFAF337,
+    0x1CBA11,
+    0x16C1DB,
+    0x203DB3,
+    0x691DCC,
+    0xAD15A8,
+    0xE3DEDE
+];
+
+export { STATES, COLORS };
