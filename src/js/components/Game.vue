@@ -20,9 +20,11 @@
 import { NButton, NSpace } from "naive-ui";
 import { STATES, COLORS } from "../../assets/variables";
 
-const objects = [];
-const colorsIndexSelected = [], geometriesSelected = [];
-let scene, camera, renderer;
+const objects = [],
+  animations = [];
+const colorsIndexSelected = [],
+  geometriesSelected = [];
+let scene, camera, renderer, light;
 
 
 export default {
@@ -125,6 +127,19 @@ export default {
       // To display anything with ThreeJS we need a scene, a camera and a renderer
       const gameNode = document.getElementById("game");
       scene = new THREE.Scene();
+
+
+      // Ambient light
+      light = new THREE.AmbientLight(0x404040, 3.8); // soft white light
+      scene.add(light);
+
+      // Directional light
+      light = new THREE.DirectionalLight(0xc33e3e, 0.8);
+      light.position.set(0, 10, 6);
+      light.target.position.set(-1, -1, -1);
+      scene.add(light);
+      scene.add(light.target);
+
       camera = new THREE.PerspectiveCamera(
         75,
         gameNode.clientWidth / gameNode.clientHeight,
@@ -139,13 +154,13 @@ export default {
       const geometry = this.getRandomGeometry();
 
       const color = this.getRandomColor();
-      const material = new THREE.MeshBasicMaterial({ color: color });
+      const material = new THREE.MeshPhongMaterial({ color: color });
 
       let obj = new THREE.Mesh(geometry, material);
 
       const numObjects = this.rules[this.level].numObjects;
 
-      obj.position.y = (index < numObjects / 2) ? 1.2 : -1.2;
+      obj.position.y = index < numObjects / 2 ? 1.2 : -1.2;
 
       let numObjsRow = Math.ceil(numObjects / 2);
       let relObjIndex = index % numObjsRow;
@@ -153,22 +168,22 @@ export default {
       if (numObjsRow % 2 == 1) {
         let centerObj = Math.trunc(numObjsRow / 2);
 
-        if (relObjIndex == centerObj) { // Pos 0,0
+        if (relObjIndex == centerObj) {
+          // Pos 0,0
           obj.position.x = 0;
-        }
-        else if (relObjIndex < centerObj) { // Left
-          obj.position.x = - 2 * (centerObj - relObjIndex);
-        }
-        else {  // Right
+        } else if (relObjIndex < centerObj) {
+          // Left
+          obj.position.x = -2 * (centerObj - relObjIndex);
+        } else {
+          // Right
           obj.position.x = 2 * (relObjIndex - centerObj);
         }
-      }
-      else {
+      } else {
         if (relObjIndex < numObjsRow / 2) {
-          obj.position.x = - (1 + 2 * (numObjsRow / 2 - (relObjIndex + 1)));
-        }
-        else {
-          obj.position.x = 1 + 2 * ( numObjsRow / 2 - (numObjsRow - relObjIndex) );
+          obj.position.x = -(1 + 2 * (numObjsRow / 2 - (relObjIndex + 1)));
+        } else {
+          obj.position.x =
+            1 + 2 * (numObjsRow / 2 - (numObjsRow - relObjIndex));
         }
       }
 
@@ -178,14 +193,43 @@ export default {
     animate() {
       requestAnimationFrame(this.animate);
 
-      // Animate the cube 
-      // this.cube.rotation.x += 0.01; 
+      // Animate the cube
+      // this.cube.rotation.x += 0.01;
       // this.cube.rotation.y += 0.01;
+
+      this.animateObjects();
 
       renderer.render(scene, camera);
     },
+    animateObjects() {
+      for (let i = 0; i < objects.length; i++) {
+        if (animations.length < objects.length) {
+          animations.push(this.generateAnimation());
+          console.log(animations)
+        }
+        objects[i].rotation.x += animations[i].rotX;
+        objects[i].rotation.y += animations[i].rotY;
+        objects[i].rotation.z += animations[i].rotZ;
+      }
+    },
+    generateAnimation() {
+        switch(this.getRandom(0, 6)) {
+          case 0: return { rotX: this.getRandomNotTrunc(-0.05, 0.05), rotY: 0, rotZ: 0 };
+          case 1: return { rotX: 0, rotY: this.getRandomNotTrunc(-0.05, 0.05), rotZ: 0 };
+          case 2: return { rotX: 0, rotY: 0, rotZ: this.getRandomNotTrunc(-0.05, 0.05) };
+          case 3: return { rotX: this.getRandomNotTrunc(-0.05, 0.05), rotY: this.getRandomNotTrunc(-0.05, 0.05), rotZ: 0 };
+          case 4: return { rotX: this.getRandomNotTrunc(-0.05, 0.05), rotY: 0, rotZ: this.getRandomNotTrunc(-0.05, 0.05) };
+          case 5: return { rotX: 0, rotY: this.getRandomNotTrunc(-0.05, 0.05), rotZ: this.getRandomNotTrunc(-0.05, 0.05) };
+          default: return { rotX: this.getRandomNotTrunc(-0.05, 0.05), rotY: this.getRandomNotTrunc(-0.05, 0.05), rotZ: this.getRandomNotTrunc(-0.05, 0.05) };
+        }
+    },
     getRandom(min, max) {
-      return Math.trunc(Math.random() * (max - min) + min);   // min included, max excluded
+      return Math.trunc(Math.random() * (max - min) + min); // min included, max excluded
+    },
+    getRandomNotTrunc(min, max) {
+      let num = Math.random() * (max - min) + min; // min included, max excluded
+      if (num < 0.02 && num > - 0.02) return this.getRandomNotTrunc(min, max);
+      else return num;
     },
     getRandomColor() {
       while (true) {
@@ -210,18 +254,16 @@ export default {
       }
       geometriesSelected.push(geo);
 
-      // console.log(geo)
-
-      switch(geo) {
+      switch (geo) {
         case 0: return new THREE.BoxGeometry();
         case 1: return new THREE.ConeGeometry();
         case 2: return new THREE.IcosahedronGeometry(0.8);
         case 3: return new THREE.OctahedronGeometry(0.8);
         case 4: return new THREE.TorusGeometry(0.5, 0.2);
         case 5: return new THREE.SphereGeometry(0.7);
-        default: return new THREE.TorusKnotGeometry();
+        default: return new THREE.TorusKnotGeometry(0.3);
       }
-    }
+    },
   },
 };
 </script>
