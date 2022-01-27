@@ -48,9 +48,6 @@ export default {
       ]
     };
   },
-  onCreated: {
-    
-  },
   methods: {
     nextState(action) {
       if (action === "game") this.$emit("changeState", { state: STATES.GAME_STATE, level: this.value });

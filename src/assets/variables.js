@@ -17,7 +17,9 @@ const COLORS = [
     0x203DB3,
     0x691DCC,
     0xAD15A8,
-    0xE3DEDE
+    0x700000
 ];
 
-export { STATES, COLORS };
+const SHINE_COLOR = 0xB2B3CF;
+
+export { STATES, COLORS, SHINE_COLOR };

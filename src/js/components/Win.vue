@@ -15,15 +15,39 @@ export default {
   components: {
     NButton
   },
+  props: {
+    roundInfo: {
+      type: Object,
+    }
+  },
   data() {
     return {};
   },
   methods: {
     nextState(action) {
       if (action === 'next')
-      	this.$emit('changeState', { state: STATES.GAME_STATE });
+      	this.$emit('changeState', { 
+                                    state: STATES.GAME_STATE,
+                                    level: this.roundInfo.level, 
+                                    round: this.roundInfo.round,  
+                                    objects: this.roundInfo.objects,
+                                    animations: this.roundInfo.animations,
+                                    sequence: this.roundInfo.sequence,
+                                    renderer: this.roundInfo.renderer,
+                                    colorsIndexSelected: this.roundInfo.colorsIndexSelected,
+                                    geometriesSelected: this.roundInfo.geometriesSelected,
+                                    scene: this.roundInfo.scene,
+                                    camera: this.roundInfo.camera,
+                                    light: this.roundInfo.light,
+                                    clock: this.roundInfo.clock,
+                                  });
 			else
-      	this.$emit('changeState', { state: STATES.CHOOSE_LEVEL_STATE });
+      	this.$emit('changeState', { 
+                                    state: STATES.CHOOSE_LEVEL_STATE,
+                                    sendPuntuation: true,
+                                    round: this.roundInfo.round,  
+                                    level: this.roundInfo.level, 
+                                  });
     }
   }
 };

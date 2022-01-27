@@ -1,15 +1,15 @@
 <template>
   <div class="container">
     <!-- <Game></Game> -->
-    <!-- <Login v-if="currentState === states.LOGIN_STATE" v-on:logged="setLoggedUser"></Login>
+    <Login v-if="currentState === states.LOGIN_STATE" v-on:logged="setLoggedUser"></Login>
 		<Instructions v-else-if="currentState === states.INSTRUCTION_STATE" v-on:changeState="nextState"></Instructions>
 		<Level v-if="currentState === states.CHOOSE_LEVEL_STATE" v-on:changeState="nextState"></Level>
-		<Game v-if="currentState === states.GAME_STATE" v-on:changeState="nextState" :level=level></Game>
+		<Game v-if="currentState === states.GAME_STATE" v-on:changeState="nextState" :level=level :roundInfo=roundInfo></Game>
 		<Ranking v-if="currentState === states.RANKINGS_STATE" v-on:changeState="nextState"></Ranking>
-		<Win v-if="currentState === states.WIN_STATE" v-on:changeState="nextState"></Win>
-		<Lose v-if="currentState === states.LOSE_STATE" v-on:changeState="nextState"></Lose> --> 
+		<Win v-if="currentState === states.WIN_STATE" v-on:changeState="nextState" :level=level :roundInfo=roundInfo></Win>
+		<Lose v-if="currentState === states.LOSE_STATE" v-on:changeState="nextState"></Lose> 
 
-		<Game :level=0></Game>
+		<!-- <Game :level=0></Game> -->
 
   </div>
 </template>
@@ -24,6 +24,7 @@ import Win from "./components/Win.vue";
 import Lose from "./components/Lose.vue";
 
 import { STATES } from "../assets/variables";
+import { postRanking, getRankings } from "./firebase";
 
 export default {
   name: "App",
@@ -45,6 +46,7 @@ export default {
         email: "",
         name: "",
       },
+      roundInfo: {},
       currentState: STATES.LOGIN_STATE,
 			states: STATES
     };
@@ -58,6 +60,27 @@ export default {
     },
     nextState(args) {
       this.currentState = args.state;
+      this.roundInfo = {
+        level: args.level, 
+        round: args.round,  
+        objects: args.objects,
+        animations: args.animations,
+        sequence: args.sequence,
+        renderer: args.renderer,
+        colorsIndexSelected: args.colorsIndexSelected,
+        geometriesSelected: args.geometriesSelected,
+        scene: args.scene,
+        camera: args.camera, 
+        light: args.light,
+        clock: args.clock,
+      };
+
+      if (args.sendPuntuation != undefined && args.sendPuntuation == true) {
+
+        console.log("App mounted - nº rounds = " + this.roundInfo.round)
+        postRanking(this.user.name, this.roundInfo.round, this.roundInfo.level);
+      }
+
       this.level = args.level;
     },
   },

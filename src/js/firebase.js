@@ -1,11 +1,12 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-import { getDatabase } from "firebase/database";
+import { getDatabase, set, get, ref, chind } from "firebase/database";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
     apiKey: "AIzaSyAWfBIWiJuNDSxfTbQZ2fAyLNBq_MkLD6k",
     authDomain: "simon-says-c00c1.firebaseapp.com",
+    databaseURL: "https://simon-says-c00c1-default-rtdb.europe-west1.firebasedatabase.app",
     projectId: "simon-says-c00c1",
     storageBucket: "simon-says-c00c1.appspot.com",
     messagingSenderId: "156895157485",
@@ -18,3 +19,30 @@ const app = initializeApp(firebaseConfig);
 // Get a reference to the database service
 const database = getDatabase(app);
 
+function postRanking(username, rounds, level) {
+    const date = new Date();
+    set(ref(database, 'rankings/'), {
+        user: username,
+        level: level,
+        points: rounds,
+        fecha: date,
+    })
+        .then(() => getRankings);
+}
+
+function getRankings() {
+    get(child(ref(database, 'rankings'))
+        .then((snaphot) => {
+            if (snaphot.exists()) 
+                console.log(snaphot.val());
+            else 
+                console.log("No data available");
+        })
+        .catch((err) => console.log(err)));
+}
+
+
+module.exports = {
+    postRanking,
+    getRankings
+}
