@@ -1,6 +1,6 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-import { getDatabase, set, get, ref, chind } from "firebase/database";
+import { getDatabase, set, get, ref, child } from "firebase/database";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -21,24 +21,18 @@ const database = getDatabase(app);
 
 function postRanking(username, rounds, level) {
     const date = new Date();
-    set(ref(database, 'rankings/'), {
+    set(ref(database, `rankings/${username}/${date.getTime()}`), {
         user: username,
         level: level,
         points: rounds,
-        fecha: date,
     })
         .then(() => getRankings);
 }
 
-function getRankings() {
-    get(child(ref(database, 'rankings'))
-        .then((snaphot) => {
-            if (snaphot.exists()) 
-                console.log(snaphot.val());
-            else 
-                console.log("No data available");
-        })
-        .catch((err) => console.log(err)));
+async function getRankings() {
+    const dbRef = ref(database);
+    const res = await get(child(dbRef, 'rankings'))
+    return res.val();
 }
 
 

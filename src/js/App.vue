@@ -1,6 +1,5 @@
 <template>
   <div class="container">
-    <!-- <Game></Game> -->
     <Login v-if="currentState === states.LOGIN_STATE" v-on:logged="setLoggedUser"></Login>
 		<Instructions v-else-if="currentState === states.INSTRUCTION_STATE" v-on:changeState="nextState"></Instructions>
 		<Level v-if="currentState === states.CHOOSE_LEVEL_STATE" v-on:changeState="nextState"></Level>
@@ -8,9 +7,6 @@
 		<Ranking v-if="currentState === states.RANKINGS_STATE" v-on:changeState="nextState"></Ranking>
 		<Win v-if="currentState === states.WIN_STATE" v-on:changeState="nextState" :level=level :roundInfo=roundInfo></Win>
 		<Lose v-if="currentState === states.LOSE_STATE" v-on:changeState="nextState"></Lose> 
-
-		<!-- <Game :level=0></Game> -->
-
   </div>
 </template>
 
@@ -76,8 +72,6 @@ export default {
       };
 
       if (args.sendPuntuation != undefined && args.sendPuntuation == true) {
-
-        console.log("App mounted - nº rounds = " + this.roundInfo.round)
         postRanking(this.user.name, this.roundInfo.round, this.roundInfo.level);
       }
 
