@@ -1,6 +1,6 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-import { getDatabase, set, get, ref, child } from "firebase/database";
+import { getDatabase, set, get, ref, child, query, orderByChild } from "firebase/database";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -21,12 +21,11 @@ const database = getDatabase(app);
 
 function postRanking(username, rounds, level) {
     const date = new Date();
-    set(ref(database, `rankings/${username}/${date.getTime()}`), {
+    set(ref(database, `rankings/${date.getTime()}`), {
         user: username,
         level: level,
         points: rounds,
     })
-        .then(() => getRankings);
 }
 
 async function getRankings() {

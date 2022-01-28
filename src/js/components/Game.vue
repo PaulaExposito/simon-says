@@ -139,7 +139,7 @@ export default {
           node.textContent = msg;
           clearInterval(intervalId);
           setTimeout(() => {
-            node.style.display = "none";
+            node.style.visibility = "hidden";
             thisOrigin.running = true;
           }, 1000);
         } else {
@@ -411,11 +411,11 @@ export default {
               }
               else if (i == this.sequence.length - 1) {
                 const node = document.getElementById("countdown");
-                node.style.display = "block";
+                node.style.visibility = "visible";
                 node.textContent = "¡TE TOCA!";
 
                 setTimeout(() => {
-                  node.style.display = "none";
+                  node.style.visibility = "hidden";
                 }, 500);
 
                 // Dispatch event to start user turn
@@ -521,7 +521,7 @@ export default {
 
 <style scoped>
 .containerGame {
-  background-color: lightsalmon;
+  background-color: black;
   height: 100%;
   width: 100%;
 }
@@ -542,7 +542,7 @@ export default {
   color: white;
   text-align: center;
   font-size: 20px;
-  z-index: 2;
+  z-index: -1;
 }
 
 </style>

@@ -1,8 +1,6 @@
 <template>
   <div class="container">
     <h2>Ranking</h2>
-		<p>TODO: Order the rankings</p>
-
     <n-table>
       <thead>
         <tr>
@@ -14,7 +12,6 @@
       </thead>
       <tbody></tbody>
     </n-table>
-
     <br>
     <n-button type="primary" @click="nextState">Volver al menú principal</n-button>
   </div>
@@ -23,7 +20,7 @@
 <script>
 import { NButton, NTable } from "naive-ui";
 import { STATES } from "../../assets/variables";
-import { postRanking, getRankings } from "../firebase";
+import { getRankings } from "../firebase";
 
 export default {
   name: "Ranking",
@@ -43,6 +40,25 @@ export default {
   methods: {
     nextState() {
       this.$emit('changeState', { state: STATES.CHOOSE_LEVEL_STATE });
+    },
+    order(data) {
+      let array = [];
+
+      for (const item in data) {
+        array.push(data[item]);
+      }
+
+      for (let i = 0; i < array.length - 1; i++) {
+        for (let j = 0; j < array.length - i - 1; j++) {
+          if (array[j]['points'] > array[j + 1]['points']) {
+            let temp = array[j];
+            array[j] = array[j + 1];
+            array[j + 1] = temp;
+          }
+        }
+      }
+
+      return array.reverse();
     }
   },
   mounted() {
@@ -50,33 +66,33 @@ export default {
 
     getRankings()
       .then(data => {
-        console.log('rankings')
         if (data == null) return;
 
         let position = 1;
+        data = this.order(data);
 
-        for (const user in data) {
-          for (const item in data[user]) {
-            const username = data[user][item]['user']
-            const level = data[user][item]['level']
-            const points = data[user][item]['points']
+        if (data.length > 5)
+          data = data.slice(0, 5);
 
-            const tr = document.createElement('tr');
-            const tdPosition = document.createElement('td');
-            tdPosition.textContent = position++;
-            tr.appendChild(tdPosition);
-            const tdUsername = document.createElement('td');
-            tdUsername.textContent = username;
-            tr.appendChild(tdUsername);
-            const tdLevel = document.createElement('td');
-            tdLevel.textContent = this.level[level];
-            tr.appendChild(tdLevel);
-            const tdPoints = document.createElement('td');
-            tdPoints.textContent = points;
-            tr.appendChild(tdPoints);
-            tbody.appendChild(tr);
-          }
+        for (const item in data) {
+          const username = data[item]['user']
+          const level = data[item]['level']
+          const points = data[item]['points']
 
+          const tr = document.createElement('tr');
+          const tdPosition = document.createElement('td');
+          tdPosition.textContent = position++;
+          tr.appendChild(tdPosition);
+          const tdUsername = document.createElement('td');
+          tdUsername.textContent = username;
+          tr.appendChild(tdUsername);
+          const tdLevel = document.createElement('td');
+          tdLevel.textContent = this.level[level];
+          tr.appendChild(tdLevel);
+          const tdPoints = document.createElement('td');
+          tdPoints.textContent = points;
+          tr.appendChild(tdPoints);
+          tbody.appendChild(tr);
         }
 
       })

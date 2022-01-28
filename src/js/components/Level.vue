@@ -9,9 +9,7 @@
         </n-radio>
       </n-space>
     </n-radio-group>
-
-    <p>Level: {{ value }} </p>
-
+    <br>
     <n-button type="primary" @click="nextState('game')">¡JUGAR!</n-button><br />
     <n-button type="primary" @click="nextState('rankings')">Rankings</n-button>
   </div>
