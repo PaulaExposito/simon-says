@@ -2,6 +2,10 @@
 
 ## Usage
 
+```
+npm run dev
+```
+
 ## Third-Party Technologies
 
 * Parcel
@@ -10,6 +14,7 @@
 * Firebase
     * Authentication
     * Realtime Database
+* ThreeJS
 
 
 ## Referencias
