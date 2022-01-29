@@ -1,15 +1,15 @@
 <template>
   <div class="container">
-    <h2>Elige el nivel</h2>
+    <h2>Elige el nivel</h2><br>
 
-    <n-radio-group v-model:value="value" name="radiogroup">
+    <n-radio-group v-model:value="value" name="radiogroup" >
       <n-space vertical>
-        <n-radio v-for="level in levels" :key="level.value" :value="level.value">
+        <n-radio v-for="level in levels" :key="level.value" :value="level.value" size="large" type="error">
           {{ level.label }}
         </n-radio>
       </n-space>
     </n-radio-group>
-    <br>
+    <br><br>
     <n-button type="primary" @click="nextState('game')">¡JUGAR!</n-button><br />
     <n-button type="primary" @click="nextState('rankings')">Rankings</n-button>
   </div>

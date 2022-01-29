@@ -4,7 +4,7 @@
       <n-form-item label="Email" path="user.email">
         <n-input v-model:value="user.email" placeholder="Email" />
       </n-form-item>
-      <n-form-item label="Contraseña" path="user.password">
+      <n-form-item label="Contraseña" type="" path="user.password">
         <n-input
           v-model:value="user.password"
           type="password"
@@ -13,7 +13,7 @@
       </n-form-item>
       <n-form-item>
         <div class="buttons">
-          <n-button secondary @click="signin">Entrar</n-button>
+          <n-button secondary type="success" @click="signin">Entrar</n-button>
           <n-button type="primary" @click="signup">Registrarse</n-button>
         </div>
       </n-form-item>
@@ -83,7 +83,7 @@ export default {
 
   height: 200px;
   padding: 40px 40px 40px 40px;
-  background: lightslategray;
+  background: rgb(29, 45, 99);
 }
 
 .buttons {
@@ -92,4 +92,5 @@ export default {
   align-items: center;
   justify-content: space-around;
 }
+
 </style>

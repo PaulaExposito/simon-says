@@ -227,6 +227,9 @@ export default {
       let numObjsRow = Math.ceil(numObjects / 2);
       let relObjIndex = index % numObjsRow;
 
+      if (obj.position.y < 0 && numObjsRow * 2 > numObjects)
+        numObjsRow = numObjsRow - 1;
+
       if (numObjsRow % 2 == 1) {
         let centerObj = Math.trunc(numObjsRow / 2);
 
@@ -529,6 +532,7 @@ export default {
 .info {
   width: 100%;
   background: lightgrey;
+  color: black;
 }
 
 #game {

@@ -12,7 +12,7 @@
       </thead>
       <tbody></tbody>
     </n-table>
-    <br>
+    <br><br>
     <n-button type="primary" @click="nextState">Volver al menú principal</n-button>
   </div>
 </template>

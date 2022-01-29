@@ -85,7 +85,7 @@ export default {
 .container {
   width: 80%;
   height: 700px;
-  background-color: lightgrey;
+  background-color: rgb(9, 24, 73);
   overflow: hidden;
 
   display: flex;
